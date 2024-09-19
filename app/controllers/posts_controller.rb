@@ -10,7 +10,7 @@ class PostsController < ApplicationController
 
   def create
     token = request.headers["Authorization"].split(" ").last
-    user_id = JwtService.get_user_id(token)
+    user_id = JwtService.get_sub(token)
     render({
              json: user_id,
              status: :ok
