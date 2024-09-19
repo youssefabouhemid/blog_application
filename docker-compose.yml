@@ -8,10 +8,10 @@ services:
     restart: always
     ports:
       - "5434:5432"
-    container_name: blog_application_development
+    container_name: postgres_dev
     environment:
-      POSTGRES_USER: blog_application_development
-      POSTGRES_PASSWORD: password
+      POSTGRES_USER: postgres_dev
+      POSTGRES_PASSWORD: dev
 
 
 
