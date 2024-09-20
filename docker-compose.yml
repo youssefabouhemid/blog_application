@@ -13,5 +13,12 @@ services:
       POSTGRES_USER: postgres_dev
       POSTGRES_PASSWORD: dev
 
+  redis:
+    image: redis:alpine
+    restart: always
+    ports:
+      - "6379:6379"
+    container_name: redis_queue
+
 
 
