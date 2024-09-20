@@ -1,4 +1,4 @@
-class AddTagValues < ActiveRecord::Migration[7.2]
+class AddPredefinedTags < ActiveRecord::Migration[7.2]
   def change
     Tag.create([
                  { value: "Test" },
