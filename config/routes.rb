@@ -1,7 +1,7 @@
 Rails.application.routes.draw do
   get("posts", { to: "posts#list" })
   post("posts", { to: "posts#create" })
-  get("posts/update")
+  patch("posts/:id", { to: "posts#update" })
   delete("posts/:id", { to: "posts#destroy" })
 
   # get("/application", { to: "application#index" })

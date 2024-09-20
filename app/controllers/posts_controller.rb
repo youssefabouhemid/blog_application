@@ -12,17 +12,24 @@ class PostsController < ApplicationController
   def create
     user_id = get_user_id
     return unless user_id
-    
-    result = PostsService.save(post_params, user_id)
-    if result.is_a?(Hash) && result[:errors]
+
+    begin
+      result = PostsService.save(create_post_params, user_id)
+      if result.is_a?(Hash) && result[:errors]
+        render({
+                 json: result,
+                 status: :unprocessable_content
+               })
+      else
+        render({
+                 json: result,
+                 status: :created
+               })
+      end
+    rescue ArgumentError => e
       render({
-               json: result,
+               json: { error: e.message },
                status: :unprocessable_content
-             })
-    else
-      render({
-               json: result,
-               status: :created
              })
     end
   end
@@ -30,6 +37,27 @@ class PostsController < ApplicationController
   def update
     user_id = get_user_id
     return unless user_id
+
+    begin
+      result = PostsService.update_by_id(update_post_params, params[:id], user_id)
+      if result == true
+        render({ status: :no_content })
+      else
+        render({
+                 json: result,
+                 status: :unprocessable_content
+               })
+      end
+    rescue ActiveRecord::RecordNotFound
+      render({ status: :not_found })
+    rescue NotAuthorOwnerException
+      render({ status: :forbidden })
+    rescue ArgumentError => e
+      render({
+               json: { error: e.message },
+               status: :unprocessable_content
+             })
+    end
   end
 
   def destroy
@@ -55,7 +83,16 @@ class PostsController < ApplicationController
 
   private
 
-  def post_params
+
+  def create_post_params
+    params.require(:post).permit(:title, :body, tags: []).tap do |whitelisted|
+      raise ArgumentError.new("Title required") unless whitelisted[:title].present?
+      raise ArgumentError.new("Body required") unless whitelisted[:body].present?
+      raise ArgumentError.new("Tags required") unless whitelisted[:tags].present?
+    end
+  end
+
+  def update_post_params
     params.require(:post).permit(:title, :body, tags: [])
   end
 
