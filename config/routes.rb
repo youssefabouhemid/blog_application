@@ -1,10 +1,17 @@
+require 'sidekiq/web'
+
 Rails.application.routes.draw do
+  #sidekiq
+  mount Sidekiq::Web => "/sidekiq" # mount Sidekiq::Web in your Rails app
+
+  # posts controller
   get("posts", { to: "posts#list" })
   post("posts", { to: "posts#create" })
   patch("posts/:id", { to: "posts#update" })
   delete("posts/:id", { to: "posts#destroy" })
 
-  # get("/application", { to: "application#index" })
+
+
 
   devise_for :users, path: "", path_names: {
     sign_in: "login",
