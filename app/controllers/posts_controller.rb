@@ -9,12 +9,27 @@ class PostsController < ApplicationController
   end
 
   def create
-    token = request.headers["Authorization"].split(" ").last
-    user_id = JwtService.get_sub(token)
-    render({
-             json: user_id,
-             status: :ok
-           })
+    user_id = JwtService.get_sub(get_bearer_token)
+    unless user_id
+      render({
+               json: "invalid token",
+               status: :unauthorized
+             })
+    end
+
+    result = PostsService.save(post_params, user_id)
+    if result.is_a?(Hash) && result[:errors]
+      render({
+               json: result,
+               status: :unprocessable_content
+             })
+    else
+      render({
+               json: result,
+               status: :created
+             })
+    end
+
   end
 
   def update
@@ -26,7 +41,7 @@ class PostsController < ApplicationController
   private
 
   def post_params
-    params.require(:post).permit(:title, :content)
+    params.require(:post).permit(:title, :body, tags: [])
   end
 
 end
