@@ -1,3 +1,4 @@
+require "./app/exceptions/not_author_owner_exception"
 class PostsController < ApplicationController
   # before_action(:authenticate_user!)
   def list
@@ -34,7 +35,30 @@ class PostsController < ApplicationController
   def update
   end
 
-  def delete
+  def destroy
+    user_id = JwtService.get_sub(get_bearer_token)
+    unless user_id
+      render({
+               json: "invalid token",
+               status: :unauthorized
+             })
+    end
+
+    begin
+      result = PostsService.delete_by_id(params[:id], user_id)
+      if result == true
+        render({ status: :no_content })
+      else
+        render({
+                 json: result,
+                 status: :unprocessable_content
+               })
+      end
+    rescue ActiveRecord::RecordNotFound
+      render({ status: :not_found })
+    rescue NotAuthorOwnerException
+      render({ status: :forbidden })
+    end
   end
 
   private
