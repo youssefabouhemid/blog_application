@@ -14,6 +14,7 @@ class PostsService
     unless post.save
       return { errors: post.errors.full_messages }
     end
+    # DeletePostJob.perform_in(10.second, post.id)
     PostSerializer.new(post).serializable_hash[:data][:attributes]
   end
 
@@ -56,8 +57,9 @@ class PostsService
 
   def self.query_tag_values(tag_values)
     if tag_values.present?
-      tags = tag_values.map { |value| Tag.find_by_value(value) }
-      if tags.any? { |tag| tag == nil }
+      tags = Tag.where(value: tag_values)
+      # tags = tag_values.map { |value| Tag.find_by_value(value) }
+      if tags.length != tag_values.length
         raise ArgumentError.new("Invalid tag(s)")
       end
     end
