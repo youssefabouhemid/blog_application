@@ -10,14 +10,9 @@ class PostsController < ApplicationController
   end
 
   def create
-    user_id = JwtService.get_sub(get_bearer_token)
-    unless user_id
-      render({
-               json: "invalid token",
-               status: :unauthorized
-             })
-    end
-
+    user_id = get_user_id
+    return unless user_id
+    
     result = PostsService.save(post_params, user_id)
     if result.is_a?(Hash) && result[:errors]
       render({
@@ -33,16 +28,13 @@ class PostsController < ApplicationController
   end
 
   def update
+    user_id = get_user_id
+    return unless user_id
   end
 
   def destroy
-    user_id = JwtService.get_sub(get_bearer_token)
-    unless user_id
-      render({
-               json: "invalid token",
-               status: :unauthorized
-             })
-    end
+    user_id = get_user_id
+    return unless user_id
 
     begin
       result = PostsService.delete_by_id(params[:id], user_id)
@@ -65,5 +57,20 @@ class PostsController < ApplicationController
 
   def post_params
     params.require(:post).permit(:title, :body, tags: [])
+  end
+
+  # Retrieves the user ID from the JWT token.
+  # If the token is invalid, it renders an unauthorized status with an error message.
+  #
+  # @return [Integer, nil] the user ID if the token is valid, otherwise nil.
+  def get_user_id
+    user_id = JwtService.get_sub(get_bearer_token)
+    unless user_id
+      render({
+               json: "invalid token",
+               status: :unauthorized
+             })
+    end
+    user_id
   end
 end
