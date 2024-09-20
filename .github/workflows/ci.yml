@@ -19,13 +19,16 @@ jobs:
           ruby-version: .ruby-version
           bundler-cache: true
 
+      - name: Fix brakeman script shebang (if needed)
+        run: sed -i '1s|.*|#!/usr/bin/env ruby|' bin/brakeman
+
       - name: Make brakeman executable
         run: chmod +x bin/brakeman
-        
+
       - name: Scan for common Rails security vulnerabilities using static analysis
         run: bin/brakeman --no-pager
 
-        
+
 
   lint:
     runs-on: ubuntu-latest
@@ -39,12 +42,16 @@ jobs:
           ruby-version: .ruby-version
           bundler-cache: true
 
+      - name: Fix rubocop script shebang (if needed)
+        run: sed -i '1s|.*|#!/usr/bin/env ruby|' bin/rubocop
+
       - name: Make rubocop executable
         run: chmod +x bin/rubocop
 
       - name: Lint code for consistent style
         run: bin/rubocop -f github
 
+        
   # test:
   #   runs-on: ubuntu-latest
 

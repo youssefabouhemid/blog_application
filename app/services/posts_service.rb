@@ -5,7 +5,7 @@ class PostsService
     # extract tags and query them
     tag_values = post_params.delete(:tags)
     if tag_values.present?
-      tags = tag_values.map { |value| Tag.find_by_value(value)}
+      tags = tag_values.map { |value| Tag.find_by_value(value) }
       if tags.any? { |tag| tag == nil }
         return { errors: "Invalid tag(s)." }
       end

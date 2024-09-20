@@ -29,7 +29,6 @@ class PostsController < ApplicationController
                status: :created
              })
     end
-
   end
 
   def update
@@ -43,5 +42,4 @@ class PostsController < ApplicationController
   def post_params
     params.require(:post).permit(:title, :body, tags: [])
   end
-
 end
