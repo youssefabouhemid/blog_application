@@ -30,7 +30,7 @@ module BlogApplication
     config.api_only = true
 
     # Set the session store and options
-    config.session_store :cookie_store, key: 'CHANGE_ME_IN_PROD' # TODO:
+    config.session_store :cookie_store, key: "CHANGE_ME_IN_PROD" # TODO:
 
     # Enable sessions for API mode
     config.middleware.use ActionDispatch::Cookies

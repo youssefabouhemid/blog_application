@@ -14,7 +14,7 @@ class PostsService
     unless post.save
       return { errors: post.errors.full_messages }
     end
-    # DeletePostJob.perform_in(10.second, post.id)
+    DeletePostJob.perform_in(10.second, { "id" => post.id })
     PostSerializer.new(post).serializable_hash[:data][:attributes]
   end
 
