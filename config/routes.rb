@@ -1,6 +1,11 @@
 require "sidekiq/web"
 
 Rails.application.routes.draw do
+  get "comments/list"
+  get "comments/create"
+  get "comments/update"
+  get "comments/destroy"
+  get "comments/search"
   # sidekiq
   mount Sidekiq::Web => "/sidekiq" # mount Sidekiq::Web in your Rails app
 
