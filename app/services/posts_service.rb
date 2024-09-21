@@ -19,7 +19,7 @@ class PostsService
   end
 
 
-  def self.update_by_id(post_params, post_id, user_id)
+  def self.update(post_params, post_id, user_id)
     post = Post.find(post_id) # throws RecordNotFound
     if post.user_id != user_id.to_i
       raise NotAuthorOwnerException.new

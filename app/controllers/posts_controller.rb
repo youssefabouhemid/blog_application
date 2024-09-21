@@ -11,7 +11,8 @@ class PostsController < ApplicationController
 
   def create
     user_id = get_user_id
-    return render({ json: { error: "invalid id" }, status: :bad_request }) unless user_id
+    return unless user_id
+
 
     begin
       result = PostsService.save(create_post_params, user_id)
@@ -36,10 +37,11 @@ class PostsController < ApplicationController
 
   def update
     user_id = get_user_id
-    return render({ json: { error: "invalid id" }, status: :bad_request }) unless user_id
+    return unless user_id
+
 
     begin
-      result = PostsService.update_by_id(update_post_params, params[:id], user_id)
+      result = PostsService.update(update_post_params, params[:id], user_id)
       if result == true
         render({ status: :no_content })
       else
@@ -62,7 +64,8 @@ class PostsController < ApplicationController
 
   def destroy
     user_id = get_user_id
-    return render({ json: { error: "invalid id" }, status: :bad_request }) unless user_id
+    return unless user_id
+
 
     begin
       result = PostsService.delete_by_id(params[:id], user_id)
