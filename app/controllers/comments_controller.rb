@@ -1,5 +1,5 @@
 class CommentsController < ApplicationController
-  def list
+def list
     post_id = params[:post_id]
     if Post.exists?(post_id)
       comments = Comment.where(post_id: post_id)
@@ -17,10 +17,10 @@ class CommentsController < ApplicationController
 
   def create
     user_id = get_user_id
-    return render({ json: { error: "invalid id" }, status: :bad_request }) unless user_id
+    return unless user_id
 
     begin
-      result = CommentsService.save(create_comment_params, params[:post_id])
+      result = CommentsService.save(create_comment_params, params[:post_id], user_id)
       if result.is_a?(Hash) && result[:error] # todo: change this is ugly and not safe
         render({
                  json: result,
@@ -43,11 +43,8 @@ class CommentsController < ApplicationController
   end
 
   def update
-    begin
-      user_id = get_user_id
-    rescue JWT::DecodeError
-      render({ json: { error: "invalid jwt" }, status: :unauthorized }) and return
-    end
+    user_id = get_user_id
+    return unless user_id
 
     begin
       CommentsService.update(create_comment_params, params[:comment_id], user_id)
