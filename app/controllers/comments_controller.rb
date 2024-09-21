@@ -43,6 +43,22 @@ class CommentsController < ApplicationController
   end
 
   def update
+    begin
+      user_id = get_user_id
+    rescue JWT::DecodeError
+      render({ json: { error: "invalid jwt" }, status: :unauthorized }) and return
+    end
+
+    begin
+      CommentsService.update(create_comment_params, params[:comment_id], user_id)
+      render({ status: :no_content })
+    rescue ActiveRecord::RecordNotFound => e
+      render({ json: { error: e.message }, status: :not_found })
+    rescue NotAuthorOwnerException
+      render({ status: :forbidden })
+    rescue Exception
+      render({ status: :internal_server_error })
+    end
   end
 
   def destroy

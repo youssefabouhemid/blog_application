@@ -3,8 +3,8 @@ require "sidekiq/web"
 Rails.application.routes.draw do
   get("posts/:post_id/comments", { to: "comments#list" })
   post("posts/:post_id/comments", { to: "comments#create" })
-  get "comments/update"
-  get "comments/destroy"
+  patch("comments/:comment_id", { to: "comments#update" })
+  delete("comments/:comment_id", { to: "comments#destroy" })
   # sidekiq
   mount Sidekiq::Web => "/sidekiq" # mount Sidekiq::Web in your Rails app
 
