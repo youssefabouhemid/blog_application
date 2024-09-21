@@ -20,7 +20,16 @@ class CommentsService
     if comment.user_id != user_id.to_i
       raise NotAuthorOwnerException.new
     end
+    comment.update!(comment_params) # throw exception if not updated
+  end
 
-    comment.update!(comment_params)
+
+
+  def self.delete(comment_id, user_id)
+    comment = Comment.find(comment_id)
+    if comment.user_id != user_id.to_i
+      raise NotAuthorOwnerException.new
+    end
+    comment.destroy! # throw exception if not deleted
   end
 end
