@@ -21,11 +21,11 @@ def list
 
     begin
       result = CommentsService.save(create_comment_params, params[:post_id], user_id)
-      render({ json: result,status: :created})
+      render({ json: result, status: :created })
     rescue ActiveRecord::RecordNotFound => e
       render({ json: { error: e.message }, status: :not_found })
     rescue ArgumentError => e
-      render({json: { error: e.message }, status: :unprocessable_content})
+      render({ json: { error: e.message }, status: :unprocessable_content })
     rescue Exception => e
       render({ json: { error: e.message }, status: :internal_server_error })
     end

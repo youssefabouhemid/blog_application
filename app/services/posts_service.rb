@@ -15,7 +15,7 @@ class PostsService
 
     DeletePostJob.perform_in(10.second, { "id" => post.id }) # schedule sidekiq delete job
 
-    return PostSerializer.new(post).serializable_hash[:data][:attributes]
+    PostSerializer.new(post).serializable_hash[:data][:attributes]
   end
 
 
@@ -32,10 +32,7 @@ class PostsService
       post.tags = tags
     end
 
-    unless post.update(post_params)
-      return { error: post.errors.full_messages }
-    end
-    true
+    post.update!(post_params)
   end
 
 
@@ -45,11 +42,7 @@ class PostsService
       raise NotAuthorOwnerException.new
     end
 
-    if post.destroy
-      true
-    else
-      { error: post.errors.full_messages }
-    end
+    post.destroy!
   end
 
 

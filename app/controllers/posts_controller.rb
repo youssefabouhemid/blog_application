@@ -15,9 +15,9 @@ class PostsController < ApplicationController
 
     begin
       result = PostsService.save(create_post_params, user_id)
-      render({ json: result,status: :created})
+      render({ json: result, status: :created })
     rescue ArgumentError => e
-      render({json: { error: e.message }, status: :unprocessable_content})
+      render({ json: { error: e.message }, status: :unprocessable_content })
     rescue Exception => e
       render({ json: { error: e.message }, status: :internal_server_error })
     end
@@ -27,26 +27,17 @@ class PostsController < ApplicationController
     user_id = get_user_id
     return unless user_id
 
-
     begin
-      result = PostsService.update(update_post_params, params[:id], user_id)
-      if result == true
-        render({ status: :no_content })
-      else
-        render({
-                 json: result,
-                 status: :unprocessable_content
-               })
-      end
+      PostsService.update(update_post_params, params[:id], user_id)
+      render({ status: :no_content })
     rescue ActiveRecord::RecordNotFound => e
       render({ json: { error: e.message }, status: :not_found })
     rescue NotAuthorOwnerException => e
       render({ json: { error: e.message }, status: :forbidden })
     rescue ArgumentError => e
-      render({
-               json: { error: e.message },
-               status: :unprocessable_content
-             })
+      render({ json: { error: e.message }, status: :unprocessable_content })
+    rescue Exception => e
+      render({ json: { error: e.message }, status: :internal_server_error })
     end
   end
 
@@ -56,19 +47,15 @@ class PostsController < ApplicationController
 
 
     begin
-      result = PostsService.delete_by_id(params[:id], user_id)
-      if result == true
-        render({ status: :no_content })
-      else
-        render({
-                 json: result,
-                 status: :unprocessable_content
-               })
-      end
+      PostsService.delete_by_id(params[:id], user_id)
+      render({ status: :no_content })
     rescue ActiveRecord::RecordNotFound => e
       render({ json: { error: e.message }, status: :not_found })
     rescue NotAuthorOwnerException => e
       render({ json: { error: e.message }, status: :forbidden })
+    rescue Exception => e
+      render({ json: { error: e.message }, status: :internal_server_error })
+
     end
   end
 
