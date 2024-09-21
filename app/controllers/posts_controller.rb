@@ -13,25 +13,13 @@ class PostsController < ApplicationController
     user_id = get_user_id
     return unless user_id
 
-
     begin
       result = PostsService.save(create_post_params, user_id)
-      if result.is_a?(Hash) && result[:error]
-        render({
-                 json: result,
-                 status: :unprocessable_content
-               })
-      else
-        render({
-                 json: result,
-                 status: :created
-               })
-      end
+      render({ json: result,status: :created})
     rescue ArgumentError => e
-      render({
-               json: { error: e.message },
-               status: :unprocessable_content
-             })
+      render({json: { error: e.message }, status: :unprocessable_content})
+    rescue Exception => e
+      render({ json: { error: e.message }, status: :internal_server_error })
     end
   end
 

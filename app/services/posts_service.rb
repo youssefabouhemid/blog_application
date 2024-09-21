@@ -11,11 +11,11 @@ class PostsService
     post = Post.new(post_params)
     post.user_id = user_id
     post.tags = tags
-    unless post.save
-      return { error: post.errors.full_messages }
-    end
-    DeletePostJob.perform_in(10.second, { "id" => post.id })
-    PostSerializer.new(post).serializable_hash[:data][:attributes]
+    post.save! # throw exception if not save
+
+    DeletePostJob.perform_in(10.second, { "id" => post.id }) # schedule sidekiq delete job
+
+    return PostSerializer.new(post).serializable_hash[:data][:attributes]
   end
 
 

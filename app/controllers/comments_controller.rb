@@ -21,24 +21,13 @@ def list
 
     begin
       result = CommentsService.save(create_comment_params, params[:post_id], user_id)
-      if result.is_a?(Hash) && result[:error] # todo: change this is ugly and not safe
-        render({
-                 json: result,
-                 status: :unprocessable_content
-               })
-      else
-        render({
-                 json: result,
-                 status: :created
-               })
-      end
+      render({ json: result,status: :created})
     rescue ActiveRecord::RecordNotFound => e
       render({ json: { error: e.message }, status: :not_found })
     rescue ArgumentError => e
-      render({
-               json: { error: e.message },
-               status: :unprocessable_content
-             })
+      render({json: { error: e.message }, status: :unprocessable_content})
+    rescue Exception => e
+      render({ json: { error: e.message }, status: :internal_server_error })
     end
   end
 

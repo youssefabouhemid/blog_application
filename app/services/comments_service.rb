@@ -8,9 +8,7 @@ class CommentsService
     comment = Comment.new(comment_params)
     comment.post = post
     comment.user_id = user_id
-    unless comment.save
-      { error: comment.errors.full_messages } # todo: change to exception for all
-    end
+    comment.save! # throw exception if not saved
     CommentSerializer.new(comment).serializable_hash[:data][:attributes]
   end
 
