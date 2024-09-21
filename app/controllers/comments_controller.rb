@@ -40,7 +40,7 @@ def list
       render({ status: :no_content })
     rescue ActiveRecord::RecordNotFound => e
       render({ json: { error: e.message }, status: :not_found })
-    rescue NotAuthorOwnerException => e # TODO: add message to return in all
+    rescue NotAuthorOwnerException => e
       render({ json: { error: e.message }, status: :forbidden })
     rescue Exception => e
       render({ json: { error: e.message }, status: :internal_server_error })

@@ -40,8 +40,8 @@ class PostsController < ApplicationController
       end
     rescue ActiveRecord::RecordNotFound => e
       render({ json: { error: e.message }, status: :not_found })
-    rescue NotAuthorOwnerException
-      render({ status: :forbidden })
+    rescue NotAuthorOwnerException => e
+      render({ json: { error: e.message }, status: :forbidden })
     rescue ArgumentError => e
       render({
                json: { error: e.message },
@@ -67,8 +67,8 @@ class PostsController < ApplicationController
       end
     rescue ActiveRecord::RecordNotFound => e
       render({ json: { error: e.message }, status: :not_found })
-    rescue NotAuthorOwnerException
-      render({ status: :forbidden })
+    rescue NotAuthorOwnerException => e
+      render({ json: { error: e.message }, status: :forbidden })
     end
   end
 
