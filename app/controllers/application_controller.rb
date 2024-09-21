@@ -13,4 +13,19 @@ class ApplicationController < ActionController::API
   def get_bearer_token
     request.headers["Authorization"].split(" ").last
   end
+
+  # Retrieves the user ID from the JWT token.
+  # If the token is invalid, it renders an unauthorized status with an error message.
+  #
+  # @return [Integer, nil] the user ID if the token is valid, otherwise nil.
+  def get_user_id
+    user_id = JwtService.get_sub(get_bearer_token)
+    unless user_id
+      render({
+               json: "invalid token",
+               status: :unauthorized
+             })
+    end
+    user_id
+  end
 end

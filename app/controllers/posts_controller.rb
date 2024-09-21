@@ -11,11 +11,11 @@ class PostsController < ApplicationController
 
   def create
     user_id = get_user_id
-    return unless user_id
+    return render({ json: {error: "invalid id"}, status: :bad_request }) unless user_id
 
     begin
       result = PostsService.save(create_post_params, user_id)
-      if result.is_a?(Hash) && result[:errors]
+      if result.is_a?(Hash) && result[:error]
         render({
                  json: result,
                  status: :unprocessable_content
@@ -36,7 +36,7 @@ class PostsController < ApplicationController
 
   def update
     user_id = get_user_id
-    return unless user_id
+    return render({ json: {error: "invalid id"}, status: :bad_request }) unless user_id
 
     begin
       result = PostsService.update_by_id(update_post_params, params[:id], user_id)
@@ -48,8 +48,8 @@ class PostsController < ApplicationController
                  status: :unprocessable_content
                })
       end
-    rescue ActiveRecord::RecordNotFound
-      render({ status: :not_found })
+    rescue ActiveRecord::RecordNotFound => e
+      render({json: { error: e.message }, status: :not_found })
     rescue NotAuthorOwnerException
       render({ status: :forbidden })
     rescue ArgumentError => e
@@ -62,7 +62,7 @@ class PostsController < ApplicationController
 
   def destroy
     user_id = get_user_id
-    return unless user_id
+    return render({ json: {error: "invalid id"}, status: :bad_request }) unless user_id
 
     begin
       result = PostsService.delete_by_id(params[:id], user_id)
@@ -74,8 +74,8 @@ class PostsController < ApplicationController
                  status: :unprocessable_content
                })
       end
-    rescue ActiveRecord::RecordNotFound
-      render({ status: :not_found })
+    rescue ActiveRecord::RecordNotFound => e
+      render({json: { error: e.message }, status: :not_found })
     rescue NotAuthorOwnerException
       render({ status: :forbidden })
     end
@@ -94,20 +94,5 @@ class PostsController < ApplicationController
 
   def update_post_params
     params.require(:post).permit(:title, :body, tags: [])
-  end
-
-  # Retrieves the user ID from the JWT token.
-  # If the token is invalid, it renders an unauthorized status with an error message.
-  #
-  # @return [Integer, nil] the user ID if the token is valid, otherwise nil.
-  def get_user_id
-    user_id = JwtService.get_sub(get_bearer_token)
-    unless user_id
-      render({
-               json: "invalid token",
-               status: :unauthorized
-             })
-    end
-    user_id
   end
 end
