@@ -29,11 +29,11 @@ module BlogApplication
     # Skip views, helpers and assets when generating a new resource.
     config.api_only = true
 
-    # Set the session store and options
-    config.session_store :cookie_store, key: "CHANGE_ME_IN_PROD" # TODO:
+    # # Set the session store and options
+    # config.session_store :cookie_store, key: "CHANGE_ME_IN_PROD" # TODO:
 
-    # Enable sessions for API mode
-    config.middleware.use ActionDispatch::Cookies
-    config.middleware.use config.session_store, config.session_options
+    # # Enable sessions for API mode
+    # config.middleware.use ActionDispatch::Cookies
+    # config.middleware.use config.session_store, config.session_options
   end
 end

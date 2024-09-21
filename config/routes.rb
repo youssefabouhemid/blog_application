@@ -5,8 +5,9 @@ Rails.application.routes.draw do
   post("posts/:post_id/comments", { to: "comments#create" })
   patch("comments/:comment_id", { to: "comments#update" })
   delete("comments/:comment_id", { to: "comments#destroy" })
-  # sidekiq
-  mount Sidekiq::Web => "/sidekiq" # mount Sidekiq::Web in your Rails app
+
+  # # sidekiq
+  # mount Sidekiq::Web => "/sidekiq" # mount Sidekiq::Web in your Rails app
 
   # posts controller
   get("posts", { to: "posts#list" })
