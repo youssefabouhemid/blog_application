@@ -21,4 +21,30 @@ services:
     container_name: redis_queue
 
 
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000"
+    depends_on:
+      - postgres
+      - redis
+    environment:
+      BLOG_APPLICATION_DATABASE_PASSWORD: dev
+      RAILS_MASTER_KEY: CHANGE_ME
+      REDIS_URL: redis://redis:6379/1
 
+
+  sidekiq:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    command: bundle exec sidekiq
+    depends_on:
+      - redis
+      - app
+    environment:
+      BLOG_APPLICATION_DATABASE_PASSWORD: dev
+      RAILS_MASTER_KEY: CHANGE_ME
+      REDIS_URL: redis://redis:6379/1

@@ -80,8 +80,9 @@ development:
 # Read https://guides.rubyonrails.org/configuring.html#configuring-a-database
 # for a full overview on how database connection configuration can be specified.
 #
-#production:
-#  <<: *default
-#  database: blog_application_production
-#  username: blog_application
-#  password: <%#= ENV["BLOG_APPLICATION_DATABASE_PASSWORD"] %>
+production:
+  <<: *default
+  database: blog_application_production
+  host: postgres
+  username: postgres_dev
+  password: <%= ENV["BLOG_APPLICATION_DATABASE_PASSWORD"] %>
