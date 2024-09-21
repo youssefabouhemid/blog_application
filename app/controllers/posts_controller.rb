@@ -11,7 +11,7 @@ class PostsController < ApplicationController
 
   def create
     user_id = get_user_id
-    return render({ json: {error: "invalid id"}, status: :bad_request }) unless user_id
+    return render({ json: { error: "invalid id" }, status: :bad_request }) unless user_id
 
     begin
       result = PostsService.save(create_post_params, user_id)
@@ -36,7 +36,7 @@ class PostsController < ApplicationController
 
   def update
     user_id = get_user_id
-    return render({ json: {error: "invalid id"}, status: :bad_request }) unless user_id
+    return render({ json: { error: "invalid id" }, status: :bad_request }) unless user_id
 
     begin
       result = PostsService.update_by_id(update_post_params, params[:id], user_id)
@@ -49,7 +49,7 @@ class PostsController < ApplicationController
                })
       end
     rescue ActiveRecord::RecordNotFound => e
-      render({json: { error: e.message }, status: :not_found })
+      render({ json: { error: e.message }, status: :not_found })
     rescue NotAuthorOwnerException
       render({ status: :forbidden })
     rescue ArgumentError => e
@@ -62,7 +62,7 @@ class PostsController < ApplicationController
 
   def destroy
     user_id = get_user_id
-    return render({ json: {error: "invalid id"}, status: :bad_request }) unless user_id
+    return render({ json: { error: "invalid id" }, status: :bad_request }) unless user_id
 
     begin
       result = PostsService.delete_by_id(params[:id], user_id)
@@ -75,7 +75,7 @@ class PostsController < ApplicationController
                })
       end
     rescue ActiveRecord::RecordNotFound => e
-      render({json: { error: e.message }, status: :not_found })
+      render({ json: { error: e.message }, status: :not_found })
     rescue NotAuthorOwnerException
       render({ status: :forbidden })
     end
@@ -85,10 +85,10 @@ class PostsController < ApplicationController
 
 
   def create_post_params
-    params.require(:post).permit(:title, :body, tags: []).tap do |whitelisted|
-      raise ArgumentError.new("Title required") unless whitelisted[:title].present?
-      raise ArgumentError.new("Body required") unless whitelisted[:body].present?
-      raise ArgumentError.new("Tags required") unless whitelisted[:tags].present?
+    params.require(:post).permit(:title, :body, tags: []).tap do |parameters|
+      raise ArgumentError.new("Title required") unless parameters[:title].present?
+      raise ArgumentError.new("Body required") unless parameters[:body].present?
+      raise ArgumentError.new("Tags required") unless parameters[:tags].present?
     end
   end
 
