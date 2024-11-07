@@ -155,7 +155,7 @@ GEM
       racc
     pg (1.5.8)
     pg (1.5.8-x64-mingw-ucrt)
-    psych (4.0.6)
+    psych (5.2.0)
       stringio
     puma (6.4.2)
       nio4r (~> 2.0)
@@ -247,7 +247,7 @@ GEM
       logger
       rack (>= 2.2.4)
       redis-client (>= 0.22.2)
-    stringio (3.1.1)
+    stringio (3.1.2)
     thor (1.3.2)
     timeout (0.4.1)
     tzinfo (2.0.6)
@@ -281,7 +281,7 @@ DEPENDENCIES
   devise-jwt
   jsonapi-serializer
   pg (~> 1.1)
-  psych (~> 4)
+  psych (~> 5)
   puma (>= 5.0)
   rack-cors
   rails (~> 7.2.1)
